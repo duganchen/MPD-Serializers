@@ -1,8 +1,6 @@
 from __future__ import (absolute_import, generators, nested_scopes,
                         print_function, unicode_literals, with_statement)
 
-from .str_utils import escape
-
 
 class MPDError(Exception):
     pass
@@ -63,20 +61,6 @@ def deserialize_songs(text):
 
     lines = _iter_lines(text, command_list=False)
     return tuple(_iter_objects(lines, separator=': ', delimiters=['file']))
-
-
-def _command_arg(arg):
-    if type(arg) is tuple:
-        if len(arg) == 1:
-            return '"{}:"'.format(int(arg[0]))
-        return '"{}:{}"'.format(int(arg[0]), int(arg[1]))
-    return '"{}"'.format(escape(_encode(arg)))
-
-
-def _encode(text):
-    if type(text) is str:
-        return text
-    return (unicode(text)).encode("utf-8")
 
 
 def _iter_listitems(lines, separator):
