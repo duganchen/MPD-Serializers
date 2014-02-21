@@ -27,3 +27,9 @@ assert deserialize_songs
 
 from .serializers import serialize_command
 assert serialize_command
+
+from . import serializers
+assert serializers
+
+from . import deserializers
+assert deserializers
