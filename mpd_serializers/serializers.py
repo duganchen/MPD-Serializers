@@ -2,6 +2,9 @@ from __future__ import (absolute_import, generators, nested_scopes,
                         print_function, unicode_literals, with_statement)
 
 
+from .introspection import all_text_is_unicode
+
+
 def serialize_command(command, *args):
     parts = (command,) + tuple(_command_arg(arg) for arg in args)
     cmdline = ' '.join(parts)
@@ -21,6 +24,9 @@ def _escape(text):
 
 
 def _encode(text):
+    if all_text_is_unicode():
+        return str(text)
+
     if type(text) is str:
         return text
     return (unicode(text)).encode("utf-8")
