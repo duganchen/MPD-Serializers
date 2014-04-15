@@ -22,14 +22,8 @@ assert deserialize_tuple
 from .deserializers import deserialize_dict
 assert deserialize_dict
 
-from .deserializers import deserialize_songs
-assert deserialize_songs
+from .deserializers import deserialize_dicts
+assert deserialize_dicts
 
 from .serializers import serialize_command
 assert serialize_command
-
-from . import serializers
-assert serializers
-
-from . import deserializers
-assert deserializers
