@@ -6,6 +6,11 @@ from .introspection import all_text_is_unicode
 
 
 def serialize_command(command, *args):
+    '''
+    Takes a commmand and its args. Returns the command, serialized and ready to
+    write to the socket.
+    '''
+
     parts = (command,) + tuple(_command_arg(arg) for arg in args)
     cmdline = ' '.join(parts)
     return '{}\n'.format(cmdline)
