@@ -11,10 +11,24 @@ from . import serializers, deserializers
 from nose.tools import eq_
 
 
-def test_serialize_command():
+def test_serialize_command_1():
 
     expected = 'list "album"\n'
     actual = serializers.serialize_command('list', 'album')
+    eq_(expected, actual)
+
+
+def test_serialize_command_2():
+
+    expected = 'delete "1:"\n'
+    actual = serializers.serialize_command('delete', (1,))
+    eq_(expected, actual)
+
+
+def test_serialize_command_3():
+
+    expected = 'delete "1:2"\n'
+    actual = serializers.serialize_command('delete', (1, 2))
     eq_(expected, actual)
 
 

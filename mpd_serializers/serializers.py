@@ -7,8 +7,11 @@ from .introspection import all_text_is_unicode
 
 def serialize_command(command, *args):
     '''
-    Takes a commmand and its args. Returns the command, serialized and ready to
-    write to the socket.
+    Takes the name of a command and its *args list. Returns the command,
+    serialized and ready to write to the socket.
+
+    To specify ranges, pass in tuples of either one integer (to omit the end of
+    the range), or two integers (to include the end of the range).
     '''
 
     parts = (command,) + tuple(_command_arg(arg) for arg in args)
