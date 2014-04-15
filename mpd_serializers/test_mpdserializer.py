@@ -45,9 +45,9 @@ def test_deserialize_dict():
     eq_(expected, actual)
 
 
-def test_deserialize_songs():
+def test_deserialize_dicts():
 
     raw_text = '\n'.join(['file: my-song.ogg', 'Pos: 0', 'Id: 66', 'OK', ''])
     expected = ({'file': 'my-song.ogg', 'pos': '0', 'id': '66'},)
-    actual = deserializers.deserialize_songs(raw_text)
+    actual = deserializers.deserialize_dicts(raw_text)
     eq_(expected, actual)

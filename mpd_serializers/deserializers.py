@@ -27,6 +27,10 @@ Success = "OK"
 
 
 def deserialize_version(text):
+    '''
+    Given the results of a connection to MPD returns the version that was
+    deserialized (as a string).
+    '''
 
     decoded = _decode(text)
 
@@ -42,6 +46,10 @@ def deserialize_version(text):
 
 
 def deserialize_nothing(text):
+    '''
+    Given a block of text returned from MPD, which is expected to be empty,
+    validates it and returns None.
+    '''
 
     decoded = _decode(text)
     for line in _iter_lines(decoded, command_list=False):
@@ -49,6 +57,10 @@ def deserialize_nothing(text):
 
 
 def deserialize_tuple(text):
+    '''
+    Given a block of text returned from MPD, deserializes it into a tuple.
+    '''
+
     decoded = _decode(text)
     lines = _iter_lines(decoded, command_list=False)
     items = _iter_listitems(lines, separator=': ')
@@ -56,6 +68,9 @@ def deserialize_tuple(text):
 
 
 def deserialize_dict(text):
+    '''
+    Given a block of text returned from MPD, deserializes it into a dictionary.
+    '''
 
     decoded = _decode(text)
     lines = _iter_lines(decoded, command_list=False)
@@ -64,7 +79,12 @@ def deserialize_dict(text):
     return {}
 
 
-def deserialize_songs(text):
+def deserialize_dicts(text):
+
+    '''
+    Given a block of text returned from MPD, deserializes it into a tuple of
+    dictionaries.
+    '''
 
     decoded = _decode(text)
     lines = _iter_lines(decoded, command_list=False)
