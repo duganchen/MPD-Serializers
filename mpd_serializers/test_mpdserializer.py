@@ -62,6 +62,11 @@ def test_deserialize_nothing():
     eq_(None, deserializers.deserialize_nothing('OK\n'))
 
 
+@raises(deserializers.ProtocolError)
+def test_deserialize_nothing_invalid():
+    deserializers.deserialize_nothing('junk\nOK\n')
+
+
 def test_deserialize_tuple():
     expected = ('J-Pop', 'Metal')
     raw_text = '\n'.join(['Genre: J-Pop', 'Genre: Metal', 'OK', ''])
