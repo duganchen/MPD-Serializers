@@ -95,3 +95,9 @@ def test_deserialize_dicts():
 @raises(deserializers.ConnectionError)
 def test_iter_lines_connection_lost():
     list(deserializers._iter_lines('OK'))
+
+
+@raises(deserializers.CommandError)
+def test_iter_lines_command_error():
+    raw = 'ACK [2@0] {delete} Bad song index\n'
+    list(deserializers._iter_lines(raw))
