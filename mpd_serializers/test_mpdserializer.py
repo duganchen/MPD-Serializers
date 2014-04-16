@@ -82,6 +82,10 @@ def test_deserialize_dict():
     eq_(expected, actual)
 
 
+def test_deserialize_dict_empty():
+    eq_({}, deserializers.deserialize_dict('OK\n'))
+
+
 def test_deserialize_dicts():
 
     raw_text = '\n'.join(['file: my-song.ogg', 'Pos: 0', 'Id: 66', 'OK', ''])

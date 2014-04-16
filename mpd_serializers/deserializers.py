@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, generators, nested_scopes,
                         print_function, unicode_literals, with_statement)
 
-from .introspection import all_text_is_unicode
+from .text_encoding import decode
 
 
 class MPDError(Exception):
@@ -32,7 +32,7 @@ def deserialize_version(text):
     deserialized (as a string).
     '''
 
-    decoded = _decode(text)
+    decoded = decode(text)
 
     if not decoded.endswith('\n'):
         raise ConnectionError('Connection lost while reading MPD hello')
@@ -51,7 +51,7 @@ def deserialize_nothing(text):
     validates it and returns None.
     '''
 
-    decoded = _decode(text)
+    decoded = decode(text)
     for line in _iter_lines(decoded, command_list=False):
         raise ProtocolError("Got unexpected return value: '{}'".format(line))
 
@@ -61,7 +61,7 @@ def deserialize_tuple(text):
     Given a block of text returned from MPD, deserializes it into a tuple.
     '''
 
-    decoded = _decode(text)
+    decoded = decode(text)
     lines = _iter_lines(decoded, command_list=False)
     items = _iter_listitems(lines, separator=': ')
     return tuple(items)
@@ -72,7 +72,7 @@ def deserialize_dict(text):
     Given a block of text returned from MPD, deserializes it into a dictionary.
     '''
 
-    decoded = _decode(text)
+    decoded = decode(text)
     lines = _iter_lines(decoded, command_list=False)
     for obj in _iter_objects(lines, separator=': ', delimiters=[]):
         return obj
@@ -86,7 +86,7 @@ def deserialize_dicts(text):
     dictionaries.
     '''
 
-    decoded = _decode(text)
+    decoded = decode(text)
     lines = _iter_lines(decoded, command_list=False)
     return tuple(_iter_objects(lines, separator=': ', delimiters=['file']))
 
@@ -147,11 +147,3 @@ def _iter_pairs(lines, separator):
         if len(pair) < 2:
             raise ProtocolError("Could not parse pair: '{}'".format(line))
         yield pair
-
-
-def _decode(text):
-
-    if all_text_is_unicode():
-        return text
-
-    return text.decode('utf-8')
