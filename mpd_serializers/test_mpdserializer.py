@@ -8,7 +8,7 @@ from __future__ import (absolute_import, generators, nested_scopes,
 
 
 from . import serializers, deserializers
-from nose.tools import eq_
+from nose.tools import eq_, raises
 
 
 def test_serialize_command_1():
@@ -38,6 +38,24 @@ def test_deserialize_version():
     expected = '0.18.0'
     actual = deserializers.deserialize_version(raw)
     eq_(expected, actual)
+
+
+@raises(deserializers.ProtocolError)
+def test_deserialize_version_invalid():
+
+    raw = u'This is an invalid string\n'
+    expected = '0.18.0'
+    actual = deserializers.deserialize_version(raw)
+    assert actual
+
+
+@raises(deserializers.ConnectionError)
+def test_deserialize_version_disconnect():
+
+    raw = u'OK MPD 0.18.0'
+    expected = '0.18.0'
+    actual = deserializers.deserialize_version(raw)
+    assert actual
 
 
 def test_deserialize_nothing():
