@@ -44,7 +44,6 @@ def test_deserialize_version():
 def test_deserialize_version_invalid():
 
     raw = u'This is an invalid string\n'
-    expected = '0.18.0'
     actual = deserializers.deserialize_version(raw)
     assert actual
 
@@ -53,7 +52,6 @@ def test_deserialize_version_invalid():
 def test_deserialize_version_disconnect():
 
     raw = u'OK MPD 0.18.0'
-    expected = '0.18.0'
     actual = deserializers.deserialize_version(raw)
     assert actual
 
@@ -92,3 +90,8 @@ def test_deserialize_dicts():
     expected = ({'file': 'my-song.ogg', 'pos': '0', 'id': '66'},)
     actual = deserializers.deserialize_dicts(raw_text)
     eq_(expected, actual)
+
+
+@raises(deserializers.ConnectionError)
+def test_iter_lines_connection_lost():
+    list(deserializers._iter_lines('OK'))
