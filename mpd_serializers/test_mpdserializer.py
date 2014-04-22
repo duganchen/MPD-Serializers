@@ -107,3 +107,9 @@ def test_iter_lines_command_error():
 def test_iter_pairs_error():
     raw = '\n'.join(['blah', 'OK'])
     list(deserializers._iter_pairs(raw, ': '))
+
+
+@raises(deserializers.ProtocolError)
+def test_iter_iterms_error():
+    lines = ['a: a\n', 'b: a\n', 'OK\n']
+    list(deserializers._iter_items(lines, ': '))

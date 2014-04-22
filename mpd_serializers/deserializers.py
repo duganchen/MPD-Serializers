@@ -63,7 +63,7 @@ def deserialize_tuple(text):
 
     decoded = decode(text)
     lines = _iter_lines(decoded, command_list=False)
-    items = _iter_listitems(lines, separator=': ')
+    items = _iter_items(lines, separator=': ')
     return tuple(items)
 
 
@@ -91,7 +91,7 @@ def deserialize_dicts(text):
     return tuple(_iter_objects(lines, separator=': ', delimiters=['file']))
 
 
-def _iter_listitems(lines, separator):
+def _iter_items(lines, separator):
 
     seen = None
     for key, value in _iter_pairs(lines, separator):
