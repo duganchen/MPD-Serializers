@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, generators, nested_scopes,
                         print_function, unicode_literals, with_statement)
 
+import itertools
 from .text_encoding import decode
 
 
@@ -45,41 +46,41 @@ def deserialize_version(text):
         return line[len(HelloPrefix):].strip()
 
 
-def deserialize_nothing(text):
+def deserialize_nothing(text, command_list=False):
     '''
     Given a block of text returned from MPD, which is expected to be empty,
     validates it and returns None.
     '''
 
     decoded = decode(text)
-    for line in _iter_lines(decoded, command_list=False):
+    for line in _iter_lines(decoded, command_list=command_list):
         raise ProtocolError("Got unexpected return value: '{}'".format(line))
 
 
-def deserialize_tuple(text):
+def deserialize_tuple(text, command_list=False):
     '''
     Given a block of text returned from MPD, deserializes it into a tuple.
     '''
 
     decoded = decode(text)
-    lines = _iter_lines(decoded, command_list=False)
+    lines = _iter_lines(decoded, command_list=command_list)
     items = _iter_items(lines, separator=': ')
     return tuple(items)
 
 
-def deserialize_dict(text):
+def deserialize_dict(text, command_list=False):
     '''
     Given a block of text returned from MPD, deserializes it into a dictionary.
     '''
 
     decoded = decode(text)
-    lines = _iter_lines(decoded, command_list=False)
+    lines = _iter_lines(decoded, command_list=command_list)
     for obj in _iter_objects(lines, separator=': ', delimiters=[]):
         return obj
     return {}
 
 
-def deserialize_dicts(text):
+def deserialize_dicts(text, command_list=False):
 
     '''
     Given a block of text returned from MPD, deserializes it into a tuple of
@@ -87,8 +88,23 @@ def deserialize_dicts(text):
     '''
 
     decoded = decode(text)
-    lines = _iter_lines(decoded, command_list=False)
+    lines = _iter_lines(decoded, command_list=command_list)
     return tuple(_iter_objects(lines, separator=': ', delimiters=['file']))
+
+
+def deserialize_command_list(text, cmd_deserializers):
+    '''
+    Given a block of text returned from an MPD command list, and a sequence
+    containing the deserializer for each command, returns the list of results.
+    '''
+
+    results = text.split('list_OK\n')[:-1]
+    if any('OK\n' in result for result in results):
+        raise ProtocolError("Got unexpected 'OK'")
+
+    zipped = itertools.izip(cmd_deserializers, results)
+    return tuple(deserializer(result, command_list=True) for deserializer,
+                 result in zipped)
 
 
 def _iter_items(lines, separator):
@@ -131,11 +147,6 @@ def _iter_lines(decoded_text, command_list=False):
         if line.startswith(ErrorPrefix):
             error = line[len(ErrorPrefix):].strip()
             raise CommandError(error)
-        if command_list:
-            if line == Next:
-                continue
-            if line == Success:
-                raise ProtocolError("Got unexpected '%s'".format(Success))
         elif line != Success:
             yield line
 

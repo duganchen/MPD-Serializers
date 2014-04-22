@@ -118,3 +118,21 @@ def test_iter_pairs_error():
 def test_iter_iterms_error():
     lines = ['a: a\n', 'b: a\n', 'OK\n']
     list(deserializers._iter_items(lines, ': '))
+
+
+def test_deserialize_comand_list():
+
+    lines = '\n'.join(['updating_db: 1', 'list_OK', 'volume: 0', 'list_OK',
+                       'OK', ''])
+    expected = ({'updating_db': '1'}, {'volume': '0'})
+    cmd_deserializers = (deserializers.deserialize_dict,
+                         deserializers.deserialize_dict)
+    actual = deserializers.deserialize_command_list(lines, cmd_deserializers)
+    eq_(expected, actual)
+
+
+@raises(deserializers.ProtocolError)
+def test_deserialize_command_list_error():
+    lines = '\n'.join(['OK', 'list_OK', 'OK', ''])
+    deserializers.deserialize_command_list(lines,
+                                           [deserializers.deserialize_nothing])
