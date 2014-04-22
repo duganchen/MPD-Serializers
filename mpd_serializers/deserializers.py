@@ -112,10 +112,10 @@ def _iter_objects(lines, separator, delimiters):
                 yield obj
                 obj = {}
             elif key.lower() in obj:
-                if not isinstance(obj[key], list):
-                    obj[key] = [obj[key], value]
+                if not isinstance(obj[key], tuple):
+                    obj[key] = (obj[key], value)
                 else:
-                    obj[key].append(value)
+                    obj[key] += (value,)
                 continue
         obj[key] = value
     if obj:

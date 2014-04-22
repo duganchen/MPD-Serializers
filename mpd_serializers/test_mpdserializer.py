@@ -90,9 +90,9 @@ def test_deserialize_dicts():
                           'Id: 67', 'artist: artist1', 'artist: artist2',
                           'artist: artist3', 'OK', ''])
     expected = ({'file': 'song1.ogg', 'id': '66'},
-                {'file': 'song2.ogg', 'id': '67', 'artist': ['artist1',
+                {'file': 'song2.ogg', 'id': '67', 'artist': ('artist1',
                                                              'artist2',
-                                                             'artist3']})
+                                                             'artist3')})
     actual = deserializers.deserialize_dicts(raw_text)
     eq_(expected, actual)
 
