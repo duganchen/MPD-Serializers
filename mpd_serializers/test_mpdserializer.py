@@ -101,3 +101,9 @@ def test_iter_lines_connection_lost():
 def test_iter_lines_command_error():
     raw = 'ACK [2@0] {delete} Bad song index\n'
     list(deserializers._iter_lines(raw))
+
+
+@raises(deserializers.ProtocolError)
+def test_iter_pairs_error():
+    raw = '\n'.join(['blah', 'OK'])
+    list(deserializers._iter_pairs(raw, ': '))
