@@ -74,8 +74,8 @@ def test_deserialize_tuple():
 
 def test_deserialize_dict():
 
-    raw_text = '\n'.join(['volume: 63', 'OK', ''])
-    expected = {'volume': '63'}
+    raw_text = '\n'.join(['volume: 63', 'state: stop', 'OK', ''])
+    expected = {'volume': '63', 'state': 'stop'}
     actual = deserializers.deserialize_dict(raw_text)
     eq_(expected, actual)
 
@@ -86,8 +86,10 @@ def test_deserialize_dict_empty():
 
 def test_deserialize_dicts():
 
-    raw_text = '\n'.join(['file: my-song.ogg', 'Pos: 0', 'Id: 66', 'OK', ''])
-    expected = ({'file': 'my-song.ogg', 'pos': '0', 'id': '66'},)
+    raw_text = '\n'.join(['file: song1.ogg', 'Id: 66', 'file: song2.ogg',
+                          'Id: 67', 'OK', ''])
+    expected = ({'file': 'song1.ogg', 'id': '66'},
+                {'file': 'song2.ogg', 'id': '67'})
     actual = deserializers.deserialize_dicts(raw_text)
     eq_(expected, actual)
 
